@@ -1,131 +1,32 @@
-import { format, getDayOfYear } from "date-fns";
-import * as de from "date-fns/locale/de";
+import { promises as fs } from "fs";
+import { join } from "path";
 
-import { IData } from "./models/data";
-import { IDay } from "./models/day";
-import { ISummary } from "./models/summary";
-
-export const getTitle = (data: IData) => `Stundenzettel - ${data.name} - ${data.year}`;
-
-export const getMonthName = (month: number) => format(new Date(0, month), "MMMM", { locale: de });
-
-export const formatDate = (year: number, month: number, day: number) => format(new Date(year, month, day), "dd, DD.MM.YYYY", { locale: de });
-
-export function militaryTimeToMinutes(timeStr: string) {
-    return Number(timeStr.slice(0, 2))*60 + Number(timeStr.slice(2));
+export function isUndefined(...args: any[]) {
+    return args.some(a => a === undefined);
 }
 
-export function minutesToMilitaryTime(minutes: number) {
-    return minutesToTime(minutes, false)!.replace(":", "");
+export async function readData() {
+    const fileContent = await fs.readFile(join(__dirname, "../../data.json"), "utf-8");
+
+    return JSON.parse(fileContent);
 }
 
-export function minutesToTime(minutes?: number, withSign?: boolean) {
-    if(minutes === undefined) {
-        return null;
-    }
+export async function writeData(data: any) {
+    const json = JSON.stringify(data, null, 4);
 
-    const absMinutes = Math.abs(minutes);
-
-    const sign = withSign ? getSign(minutes) : "";
-    const h = Math.floor(absMinutes / 60);
-    const m = absMinutes % 60;
-
-    const pad = (number: number) => number.toString().padStart(2, "0");
-
-    return `${sign}${pad(h)}:${pad(m)}`;
+    await fs.writeFile(join(__dirname, "../../data.json"), json);
 }
 
-export function isTimeOfDay(day: IDay) {
-    return (day.end || 0) - (day.start || 0) - (day.break || 0);
-}
+export function assignDefinedProperties<S extends any>(target: any, source: S, properties: (keyof S)[]) {
+    properties.forEach(p => {
+        if(source[p] !== undefined) {
+            if(source[p] === "null") {
+                delete target[p];
+            } else {
+                target[p] = source[p];
+            }
+        }
+    });
 
-export function shouldTimeOfDay(day: IDay) {
-    return day.should - (day.holiday || 0) - (day.sick || 0);
-}
-
-function getDays(months: IDay[][], start: Date, end: Date) {
-    const startAsDayOfYear = getDayOfYear(start);
-    const endAsDayOfYear = getDayOfYear(end);
-
-    return months.flat().slice(startAsDayOfYear-1, endAsDayOfYear);    
-}
-
-export function getSummaryOfDay(day: IDay): ISummary {
-    const is = isTimeOfDay(day);
-    const should = shouldTimeOfDay(day);
-    const difference = is - should;
-
-    return { is, should, difference };
-}
-
-export function getSummaryOfRange(months: IDay[][], start: Date, end: Date, offset?: number) {
-    const startValue: ISummary = {
-        is: offset || 0,
-        should: 0,
-        difference: offset || 0,
-    };
-
-    return getDays(months, start, end)
-        .reduce((summary, day) => { 
-            const summaryOfDay = getSummaryOfDay(day);
-
-            const newSummary: ISummary = {
-                is: summary.is + summaryOfDay.is,
-                should: summary.should + summaryOfDay.should,
-                difference: summary.difference + summaryOfDay.difference,
-            };
-
-            return newSummary;
-
-        }, startValue);
-}
-
-export function getHolidaySummary(data: IData): ISummary {
-    const is = data.months.flat().reduce((sum, day) => sum + (day.holiday || 0), 0);
-
-    return {
-        is,
-        should: data.startWith.holiday,
-        difference: data.startWith.holiday - is,
-    };
-}
-
-export function getSign(number: number) {
-    if(number > 0) {
-        return "+";
-    }
-
-    if(number < 0) {
-        return "-";
-    }
-
-    return " ";
-}
-
-interface IStringable {
-    toString(): string;
-}
-
-export function cell(value: IStringable | undefined, width: number, align: "center" | "left" | "right") {
-    if(!value) {
-        return " ".repeat(width);
-    }
-    
-    switch(align) {
-        case "center": return value.toString().padStart(width / 2, " ").padEnd(width / 2, " ");
-        case "left": return value.toString().padEnd(width, " ");
-        case "right": return value.toString().padStart(width, " ");
-    }
-}
-
-export function summaryToColor(summary: ISummary) {
-    if(summary.should === 0) {
-        return "{gray-fg}";
-    }
-
-    if(summary.difference < 0) {
-        return "{red-fg}";
-    }
-
-    return "{green-fg}";
+    return target;
 }

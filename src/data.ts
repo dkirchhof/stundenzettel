@@ -18,7 +18,6 @@ export const data: IData = {
                 "start": 480,
                 "end": 960,
                 "break": 30,
-                "holiday": 30,
                 "sick": 30, 
             },
             {

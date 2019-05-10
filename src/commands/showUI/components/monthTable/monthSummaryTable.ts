@@ -1,9 +1,9 @@
 import { box } from "blessed";
 import { startOfMonth, min, endOfMonth, startOfYear } from "date-fns";
 
-import { store } from "../store";
-import { getSummaryOfRange, minutesToTime, summaryToColor, cell } from "../utils";
-import { eventBus, EventType } from "../events";
+import { store } from "../../../../store";
+import { getSummaryOfRange, minutesToTime, summaryToColor, cell } from "../../utils";
+import { eventBus, EventType } from "../../events";
 
 export const monthSummaryTable = () => {
     const headerColumns = [

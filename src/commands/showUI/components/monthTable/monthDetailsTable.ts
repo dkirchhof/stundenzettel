@@ -1,9 +1,9 @@
 import { box } from "blessed";
 
-import { store } from "../store";
-import { minutesToTime, summaryToColor, formatDate, getSummaryOfDay, cell } from "../utils";
-import { eventBus, EventType } from "../events";
-import { IDay } from "../models/day";
+import { store } from "../../../../store";
+import { minutesToTime, summaryToColor, formatDate, getSummaryOfDay, cell } from "../../utils";
+import { eventBus, EventType } from "../../events";
+import { IDay } from "../../../../models/day";
 
 export const monthDetailsTable = () => {
     const headerColumns = [

@@ -1,7 +1,7 @@
 import { box, list } from "blessed";
 
 import { eventBus, EventType } from "../events";
-import { store } from "../store";
+import { store } from "../../../store";
 import { getMonthName } from "../utils";
 
 export const monthSelector = () => {
@@ -25,7 +25,7 @@ export const monthSelector = () => {
     eventBus.addListener(EventType.MonthSelected, () => listbox.select(store.selectedMonth));
 
     const container = box({
-        top: 5,
+        top: 3,
         width: 20,
     });
     

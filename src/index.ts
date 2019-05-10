@@ -1,33 +1,42 @@
-import { screen } from "blessed";
+import * as parseArgs from "minimist";
 
-import { header } from "./components/header";
-import { holidayTable } from "./components/holidayTable";
-import { monthSelector } from "./components/monthSelector";
-import { monthTable } from "./components/monthTable";
-import { store } from "./store";
-import { getTitle } from "./utils";
+import { printDay } from "./commands/printDay";
+import { setDay } from "./commands/setDay";
+import { setHoliday } from "./commands/setHoliday";
+import { showUI } from "./commands/showUI";
 
-const myScreen = screen({ 
-    title: getTitle(store.data),
+const args: any = parseArgs(process.argv.slice(2), { 
+    alias: {
+        // set
+        "date"      : "d",
+        "start"     : "s",
+        "end"       : "e",
+        "break"     : "b",
+        "holiday"   : "h",
+
+        // set-holiday
+        "startDate": "s",
+        "endDate"  : "e",
+    },
 });
 
-myScreen.append(header());
-myScreen.append(holidayTable());
-myScreen.append(monthSelector());
-myScreen.append(monthTable());
+// console.log(args);
 
-myScreen.key(["escape", "q", "C-c"], () => {
-    process.exit(0);
-});
-
-myScreen.key(["down", "j"], () => {
-    store.selectMonth(store.selectedMonth + 1);
-    myScreen.render();
-});
-
-myScreen.key(["up", "k"], () => {
-    store.selectMonth(store.selectedMonth - 1);
-    myScreen.render();
-});
-
-myScreen.render();
+switch(args._[0]) {
+    case "get": {
+        printDay(args._[1]);
+        break;
+    }
+    case "set": {
+        setDay(args);
+        break;
+    }
+    case "setHoliday": {
+        setHoliday(args);
+        break;
+    }
+    default: {
+        showUI();
+        break;
+    }
+} 
