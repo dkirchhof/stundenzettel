@@ -6,7 +6,7 @@ interface IReadFileOrCatchOptions {
     onOtherError: (e: Error) => any;
 }
 
-export const readJSONOrCatch = async (options: IReadFileOrCatchOptions) => {
+export const readJsonOrCatch = async (options: IReadFileOrCatchOptions) => {
     try {
         const content = await fs.readFile(options.path, "utf8");
         return JSON.parse(content);

@@ -5,7 +5,9 @@ import { header } from "./showUI/components/header";
 import { monthSelector } from "./showUI/components/monthSelector";
 import { monthTable } from "./showUI/components/monthTable";
 
-export const showUI = () => {
+export const showUI = async () => {
+    await store.load(new Date().getFullYear());
+
     const myScreen = screen({ 
         title: `Stundenzettel - ${store.data.name} - ${store.data.year}`,
     });

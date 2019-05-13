@@ -18,7 +18,7 @@ export async function setDay(options: IOptions) {
         throw new Error("Invalid date");
     }
 
-    await store.load();
+    await store.load(date.getFullYear());
 
     const day = getDay(store.data.months, date);
     

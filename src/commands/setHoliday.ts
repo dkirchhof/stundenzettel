@@ -18,7 +18,15 @@ export async function setHoliday(options: IOptions) {
         throw new Error("Invalid end date");
     }
 
-    await store.load();
+    if(startDate.getFullYear() !== endDate.getFullYear()) {
+        throw new Error("The start and end date should be in the same year.")
+    }
+
+    if(startDate > endDate) {
+        throw new Error("The start date should be smaller than or equals to the end date.");
+    }
+
+    await store.load(startDate.getFullYear());
 
     const days = getDays(store.data.months, startDate, endDate);
 
