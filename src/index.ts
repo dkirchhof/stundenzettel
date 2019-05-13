@@ -4,9 +4,13 @@ import { printDay } from "./commands/printDay";
 import { setDay } from "./commands/setDay";
 import { setHoliday } from "./commands/setHoliday";
 import { showUI } from "./commands/showUI";
+import { createConfig } from "./commands/createConfig";
 
 const args: any = parseArgs(process.argv.slice(2), { 
     alias: {
+        // createConfig
+        "path"      : "p",
+
         // set
         "date"      : "d",
         "start"     : "s",
@@ -23,6 +27,10 @@ const args: any = parseArgs(process.argv.slice(2), {
 // console.log(args);
 
 switch(args._[0]) {
+    case "createConfig": {
+        createConfig(args);
+        break;
+    }
     case "get": {
         printDay(args._[1]);
         break;

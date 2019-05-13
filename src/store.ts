@@ -1,17 +1,34 @@
 import { promises as fs } from "fs";
+import { homedir } from "os";
 import { join } from "path";
 
 import { eventBus, EventType } from "./commands/showUI/events";
 import { data } from "./data";
+import { IConfig } from "./models/config";
+import { IData } from "./models/data";
+import { readJSONOrCatch } from "./utils/fsUtils";
+
+const CONFIG_PATH = join(homedir(), ".stundenzettel");
 
 class Store {
-    public data = data;
+    public config: IConfig;
+    public data: IData = data;
     public selectedMonth = 0;
 
-    public async load() {
-        // const fileContent = await fs.readFile(join(__dirname, "../../data.json"), "utf-8");
+    public async load(year?: number) {
+        this.config = await readJSONOrCatch({
+            path: CONFIG_PATH,
+            onFileNotFound: _ => { throw new Error("Couldn't find a config file"); },
+            onOtherError:   e => { throw e; },
+        });
 
-        // return JSON.parse(fileContent);
+        const data = await readJSONOrCatch({
+            path: join(this.config.path, `${year.toString()}.json`),
+            onFileNotFound: _ => { throw new Error("Couldn't find data file"); },
+            onOtherError:   e => { throw e; },
+        });
+
+        console.log(data);
     }
 
     public async save() {
