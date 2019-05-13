@@ -1,4 +1,5 @@
 export interface IDay {
+    date: string;
     should: number;
 
     start?: number;
