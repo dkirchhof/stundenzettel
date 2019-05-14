@@ -26,7 +26,7 @@ export async function setHoliday(options: IOptions) {
         throw new Error("The start date should be smaller than or equals to the end date.");
     }
 
-    await store.load(startDate.getFullYear());
+    await store.load(startDate);
 
     const days = getDays(store.data.months, startDate, endDate);
 

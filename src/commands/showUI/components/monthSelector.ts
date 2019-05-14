@@ -22,6 +22,8 @@ export const monthSelector = () => {
         }
     });
 
+    listbox.select(store.selectedMonth);
+
     eventBus.addListener(EventType.MonthSelected, () => listbox.select(store.selectedMonth));
 
     const container = box({

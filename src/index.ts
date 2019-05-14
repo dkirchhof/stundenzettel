@@ -18,7 +18,7 @@ const args: any = parseArgs(process.argv.slice(2), {
         "break"     : "b",
         "holiday"   : "h",
 
-        // set-holiday
+        // setHoliday
         "startDate": "s",
         "endDate"  : "e",
     },
@@ -44,7 +44,7 @@ switch(args._[0]) {
         break;
     }
     default: {
-        showUI();
+        showUI(args);
         break;
     }
 } 

@@ -5,8 +5,14 @@ import { header } from "./showUI/components/header";
 import { monthSelector } from "./showUI/components/monthSelector";
 import { monthTable } from "./showUI/components/monthTable";
 
-export const showUI = async () => {
-    await store.load(new Date().getFullYear());
+interface IOptions {
+    date?: string;
+}
+
+export const showUI = async (options: IOptions) => {
+    const date = options.date ? new Date(options.date) : new Date();
+
+    await store.load(date);
 
     const myScreen = screen({ 
         title: `Stundenzettel - ${store.data.name} - ${store.data.year}`,

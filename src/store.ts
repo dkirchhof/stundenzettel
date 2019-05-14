@@ -12,9 +12,9 @@ const CONFIG_PATH = join(homedir(), ".stundenzettel");
 class Store {
     public config: IConfig;
     public data: IData;
-    public selectedMonth = 0;
+    public selectedMonth: number;
 
-    public async load(year: number) {
+    public async load(date: Date) {
         this.config = await readJsonOrCatch({
             path: CONFIG_PATH,
             onFileNotFound: _ => { throw new Error("Couldn't find a config file"); },
@@ -22,10 +22,12 @@ class Store {
         });
 
         this.data = await readJsonOrCatch({
-            path: join(this.config.path, `${year.toString()}.json`),
+            path: join(this.config.path, `${date.getFullYear().toString()}.json`),
             onFileNotFound: _ => { throw new Error("Couldn't find data file"); },
             onOtherError:   e => { throw e; },
         });
+
+        this.selectedMonth = date.getMonth();
     }
 
     public async save() {
