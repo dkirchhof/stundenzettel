@@ -1,4 +1,4 @@
-import { format, getDayOfYear } from "date-fns";
+import { format, getDayOfYear, startOfMonth, endOfMonth } from "date-fns";
 import * as de from "date-fns/locale/de";
 
 import { IData } from "../../models/data";
@@ -7,7 +7,7 @@ import { ISummary } from "../../models/summary";
 
 export const getMonthName = (month: number) => format(new Date(0, month), "MMMM", { locale: de });
 
-export const formatDate = (year: number, month: number, day: number) => format(new Date(year, month, day), "dd, DD.MM.YYYY", { locale: de });
+export const formatDate = (date: Date) => format(date, "dd, DD.MM.YYYY", { locale: de });
 
 export function militaryTimeToMinutes(timeStr: string) {
     return Number(timeStr.slice(0, 2))*60 + Number(timeStr.slice(2));
@@ -41,15 +41,22 @@ export function shouldTimeOfDay(day: IDay) {
     return day.should - (day.holiday || 0) - (day.sick || 0);
 }
 
-export function getDay(months: IDay[][], date: Date) {
-    return getDays(months, date, date)[0] || null;
+export function getDay(days: IDay[], date: Date) {
+    return getDays(days, date, date)[0];
 }
 
-export function getDays(months: IDay[][], start: Date, end: Date) {
+export function getDaysOfMonth(days: IDay[], date: Date) {
+    const start = startOfMonth(date);
+    const end = endOfMonth(date);
+
+    return getDays(days, start, end);
+} 
+
+export function getDays(days: IDay[], start: Date, end: Date) {
     const startAsDayOfYear = getDayOfYear(start);
     const endAsDayOfYear = getDayOfYear(end);
 
-    return months.flat().slice(startAsDayOfYear-1, endAsDayOfYear);    
+    return days.slice(startAsDayOfYear-1, endAsDayOfYear);    
 }
 
 export function getSummaryOfDay(day: IDay): ISummary {
@@ -60,14 +67,14 @@ export function getSummaryOfDay(day: IDay): ISummary {
     return { is, should, difference };
 }
 
-export function getSummaryOfRange(months: IDay[][], start: Date, end: Date, offset?: number) {
+export function getSummaryOfRange(days: IDay[], start: Date, end: Date, offset?: number) {
     const startValue: ISummary = {
         is: offset || 0,
         should: 0,
         difference: offset || 0,
     };
 
-    return getDays(months, start, end)
+    return getDays(days, start, end)
         .reduce((summary, day) => { 
             const summaryOfDay = getSummaryOfDay(day);
 
@@ -83,7 +90,7 @@ export function getSummaryOfRange(months: IDay[][], start: Date, end: Date, offs
 }
 
 export function getHolidaySummary(data: IData): ISummary {
-    const is = data.months.flat().reduce((sum, day) => sum + (day.holiday || 0), 0);
+    const is = data.days.reduce((sum, day) => sum + (day.holiday || 0), 0);
 
     return {
         is,

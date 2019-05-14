@@ -28,7 +28,7 @@ export async function setHoliday(options: IOptions) {
 
     await store.load(startDate);
 
-    const days = getDays(store.data.months, startDate, endDate);
+    const days = getDays(store.data.days, startDate, endDate);
 
     days.forEach(d => {
         if(d.should) {

@@ -10,7 +10,7 @@ export async function printDay(dateString?: string) {
 
     await store.load(date);
     
-    const day = getDay(store.data.months, date);
+    const day = getDay(store.data.days, date);
 
     console.log(day);
 }

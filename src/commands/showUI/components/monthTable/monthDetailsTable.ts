@@ -1,7 +1,7 @@
 import { box } from "blessed";
 
 import { store } from "../../../../store";
-import { minutesToTime, summaryToColor, formatDate, getSummaryOfDay, cell } from "../../utils";
+import { minutesToTime, summaryToColor, formatDate, getSummaryOfDay, cell, getDaysOfMonth } from "../../utils";
 import { eventBus, EventType } from "../../events";
 import { IDay } from "../../../../models/day";
 
@@ -24,11 +24,11 @@ export const monthDetailsTable = () => {
         content: headerColumns.join("\t"),
     });
     
-    const dayToRow = (day: IDay, index) => {
+    const dayToRow = (day: IDay) => {
         const summary = getSummaryOfDay(day);
         
         const columns = [
-            cell(formatDate(store.data.year, store.selectedMonth, index+1), 14, "left"),
+            cell(formatDate(new Date(day.date)), 14, "left"),
             cell(minutesToTime(day.start), 5, "right"),
             cell(minutesToTime(day.end), 5, "right"),
             cell(minutesToTime(day.break), 5, "right"),
@@ -44,7 +44,7 @@ export const monthDetailsTable = () => {
     }
 
     const setContent = () => {
-        const rows = store.data.months[store.selectedMonth].map(dayToRow);
+        const rows = getDaysOfMonth(store.data.days, new Date(store.data.year, store.selectedMonth)).map(dayToRow);
         
         table.setContent(rows.join("\n"));
     }

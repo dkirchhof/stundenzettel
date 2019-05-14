@@ -38,8 +38,8 @@ class Store {
 
     public selectMonth(index: number) {
         if(index < 0) {
-            index = this.data.months.length - 1;
-        } else if(index >= this.data.months.length) {
+            index = 11;
+        } else if(index >= 12) {
             index = 0;
         }
 

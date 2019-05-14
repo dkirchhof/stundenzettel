@@ -8,5 +8,5 @@ export interface IData {
         holiday: number;
         timeFromYearBefore: number;
     };
-    months: IDay[][];
+    days: IDay[];
 }

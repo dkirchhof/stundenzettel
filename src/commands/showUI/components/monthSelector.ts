@@ -10,11 +10,11 @@ export const monthSelector = () => {
         bg: "gray",
     });
     
-    const items = store.data.months.map((_, i) => getMonthName(i));
-    
     const listbox = list({
         top: 1,
-        items,
+        items: [
+            "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"
+        ],
         style: { 
             selected: {
                 bg: "blue",

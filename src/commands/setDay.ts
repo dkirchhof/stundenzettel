@@ -20,7 +20,7 @@ export async function setDay(options: IOptions) {
 
     await store.load(date);
 
-    const day = getDay(store.data.months, date);
+    const day = getDay(store.data.days, date);
     
     assignDefinedProperties(day, options, ["start", "end", "break", "holiday", "sick"]);
 
