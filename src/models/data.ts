@@ -6,7 +6,7 @@ export interface IData {
     minutesPerDay: number;
     startWith: {
         holiday: number;
-        timeFromYearBefore: number;
+        deltaFromYearBefore: number;
     };
     days: IDay[];
 }

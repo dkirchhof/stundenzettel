@@ -1,8 +1,12 @@
 import { store } from "../store";
 import { getDay } from "./showUI/utils";
 
-export async function printDay(dateString?: string) {
-    const date = dateString ? new Date(dateString) : new Date();
+interface IOptions {
+    date?: string;
+}
+
+export async function printDay(options: IOptions) {
+    const date = options.date ? new Date(options.date) : new Date();
 
     if(isNaN(date.getTime())) {
         throw new Error("Invalid date");

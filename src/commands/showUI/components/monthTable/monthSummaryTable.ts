@@ -23,7 +23,7 @@ export const monthSummaryTable = () => {
         const now = new Date();
 
         const monthSummary = getSummaryOfRange(store.data.days, startOfMonth(month), min(now, endOfMonth(month)));
-        const yearSummary = getSummaryOfRange(store.data.days, startOfYear(month), min(now, endOfMonth(month)), store.data.startWith.timeFromYearBefore);
+        const yearSummary = getSummaryOfRange(store.data.days, startOfYear(month), min(now, endOfMonth(month)), store.data.startWith.deltaFromYearBefore);
 
         const monthColumns = [
             cell("Monat", 59, "left"),
