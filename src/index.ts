@@ -5,6 +5,7 @@ import { setDay } from "./commands/setDay";
 import { setHoliday } from "./commands/setHoliday";
 import { showUI } from "./commands/showUI";
 import { createConfig } from "./commands/createConfig";
+import { createSheet } from "./commands/createSheet";
 
 const args: any = parseArgs(process.argv.slice(2), { 
     alias: {
@@ -31,8 +32,12 @@ switch(args._[0]) {
         createConfig(args);
         break;
     }
+    case "create": {
+        createSheet();
+        break;
+    }
     case "get": {
-        printDay(args._[1]);
+        printDay(args);
         break;
     }
     case "set": {

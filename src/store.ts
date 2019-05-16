@@ -14,20 +14,22 @@ class Store {
     public data: IData;
     public selectedMonth: number;
 
-    public async load(date: Date) {
+    public async load(date?: Date) {
         this.config = await readJsonOrCatch({
             path: CONFIG_PATH,
             onFileNotFound: _ => { throw new Error("Couldn't find a config file"); },
             onOtherError:   e => { throw e; },
         });
 
-        this.data = await readJsonOrCatch({
-            path: join(this.config.path, `${date.getFullYear().toString()}.json`),
-            onFileNotFound: _ => { throw new Error("Couldn't find data file"); },
-            onOtherError:   e => { throw e; },
-        });
-
-        this.selectedMonth = date.getMonth();
+        if(date) {
+            this.data = await readJsonOrCatch({
+                path: join(this.config.path, `${date.getFullYear().toString()}.json`),
+                onFileNotFound: _ => { throw new Error("Couldn't find data file"); },
+                onOtherError:   e => { throw e; },
+            });
+            
+            this.selectedMonth = date.getMonth();
+        }
     }
 
     public async save() {
