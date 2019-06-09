@@ -1,5 +1,5 @@
-import chalk from "chalk";
 import { Interface, createInterface } from "readline";
+import { colorizeString, Colors } from "./formatter";
 
 interface IQuestion<T> {
     question: string;
@@ -19,7 +19,7 @@ type Result<Q extends Questions> = {
 export const askQuestion = <T>(readlineInterface: Interface, question: IQuestion<T>) => new Promise<string | T>(resolve => {
     const string = question.optional ? `[${question.question}]: ` : `${question.question}: `;
     
-    readlineInterface.question(chalk.green(string), answer => {
+    readlineInterface.question(colorizeString(string, Colors.Green), answer => {
         if(question.converter) {
             return resolve(question.converter(answer));
         }

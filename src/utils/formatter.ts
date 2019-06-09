@@ -41,7 +41,7 @@ const alignString = (value: string, width: number, align: Alignment) => {
     }
 };
 
-const colorizeString = (value: string, color?: Colors) => {
+export const colorizeString = (value: string, color?: Colors) => {
     if(!color) {
         return value;
     }
