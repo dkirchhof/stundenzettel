@@ -26,7 +26,6 @@ export const printAsTable = (days: IDay[]) => {
         const summary = getSummaryOfDay(day);
 
         const color: Colors = summary.should === 0 ? Colors.BrightBlack : summary.difference < 0 ? Colors.Red : Colors.Green;
-        const sign = summary.difference < 0 ? "-" : summary.difference > 0 ? "+" : "";
 
         const row: Row = {
             Date: { 
@@ -86,7 +85,7 @@ export const printAsTable = (days: IDay[]) => {
                 }, 
             },
             Difference: { 
-                value: sign + minutesToTime(summary.difference),
+                value: minutesToTime(summary.difference),
                 style: {
                     align: "right",
                     color,

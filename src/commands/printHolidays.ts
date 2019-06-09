@@ -54,7 +54,7 @@ export async function printHolidays() {
     const difference = data.holiday.days - is;
 
     const color: Colors = difference > 0 ? Colors.Green : difference < 0 ? Colors.Red : Colors.BrightBlack;
-    const sign = difference > 0 ? "+" : difference < 0 ? "-" : "";
+    const sign = difference < 0 ? "-" : "";
 
     const summaryRow: Row = {
         Holiday: {

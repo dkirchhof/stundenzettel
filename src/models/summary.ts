@@ -52,7 +52,6 @@ export const printAsTable = (summaries: Array<{ name: string; summary: IRangeSum
     const summaryToRow = (summary: { name: string; summary: IRangeSummary; }) => {
 
         const color: Colors = summary.summary.should === 0 ? Colors.BrightBlack : summary.summary.difference < 0 ? Colors.Red : Colors.Green;
-        const sign = summary.summary.difference < 0 ? "-" : summary.summary.difference > 0 ? "+" : "";
 
         const row: Row = {
             Summary: { 
@@ -91,7 +90,7 @@ export const printAsTable = (summaries: Array<{ name: string; summary: IRangeSum
                 },
             },
             Difference: {
-                value: sign + minutesToTime(summary.summary.difference),
+                value: minutesToTime(summary.summary.difference),
                 style: {
                     align: "right",
                     color,
