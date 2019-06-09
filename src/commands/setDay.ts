@@ -2,8 +2,7 @@ import { format } from "date-fns";
 
 import { loadData, saveData } from "../data";
 import { askQuestions } from "../utils/consoleUtils";
-import { timeToMinutes, minutesToTime } from "../utils/timeUtils";
-import { getDay } from "./showUI/utils";
+import { getDay, timeToMinutes, minutesToTime } from "../utils/timeUtils";
 import { IDay } from "../models/day";
 
 export async function setDay() {

@@ -1,20 +1,14 @@
-import { format, min, startOfYear, endOfYear } from "date-fns";
-
 import { askQuestions } from "../utils/consoleUtils";
-import { getDays } from "./showUI/utils";
 import { loadData } from "../data";
-import { printAsTable as printDaysAsTable, IDay } from "../models/day";
-import { getSummaryOfRange, printAsTable as printSummariesAsTable } from "../models/summary";
+import { IDay } from "../models/day";
 import { Row, table, Colors } from "../utils/formatter";
 import { formatDate, minutesToTime } from "../utils/timeUtils";
 
 export async function printHolidays() {
-    const todayAsString = format(new Date(), "YYYY");
-
     const answers = await askQuestions({
         date: {
             question: "Date (YYYY)",
-            defaultValue: todayAsString,
+            defaultValue: new Date().getFullYear().toString(),
             converter: s => new Date(s),
         },
     });

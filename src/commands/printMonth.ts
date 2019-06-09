@@ -1,10 +1,10 @@
 import { format, startOfMonth, endOfMonth, min, startOfYear } from "date-fns";
 
 import { askQuestions } from "../utils/consoleUtils";
-import { getDays } from "./showUI/utils";
 import { loadData } from "../data";
 import { printAsTable as printDaysAsTable } from "../models/day";
 import { getSummaryOfRange, printAsTable as printSummariesAsTable } from "../models/summary";
+import { getDays } from "../utils/timeUtils";
 
 export async function printMonth() {
     const now = new Date();

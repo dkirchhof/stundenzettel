@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { loadData, saveData } from "../data";
 import { askQuestions } from "../utils/consoleUtils";
-import { getDays } from "./showUI/utils";
+import { getDays } from "../utils/timeUtils";
 
 export async function setHoliday() {
     const thisYearAsString = format(new Date(), "YYYY-");

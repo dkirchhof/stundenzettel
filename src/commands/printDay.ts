@@ -1,9 +1,9 @@
 import { format } from "date-fns";
 
 import { askQuestions } from "../utils/consoleUtils";
-import { getDay } from "./showUI/utils";
 import { loadData } from "../data";
 import { printAsTable } from "../models/day";
+import { getDay } from "../utils/timeUtils";
 
 export async function printDay() {
     const todayAsString = format(new Date(), "YYYY-MM-DD");

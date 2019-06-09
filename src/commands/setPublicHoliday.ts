@@ -2,8 +2,7 @@ import { format } from "date-fns";
 
 import { loadData, saveData } from "../data";
 import { askQuestions } from "../utils/consoleUtils";
-import { timeToMinutes } from "../utils/timeUtils";
-import { getDay } from "./showUI/utils";
+import { getDay, timeToMinutes } from "../utils/timeUtils";
 
 export async function setPublicHoliday() {
     const thisYearAsString = format(new Date(), "YYYY-");

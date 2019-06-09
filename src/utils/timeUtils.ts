@@ -1,4 +1,6 @@
-import { format } from "date-fns";
+import { format, getDayOfYear } from "date-fns";
+
+import { IDay } from "../models/day";
 
 export function timeToMinutes(timeStr: string) {
     const match = timeStr.match(/(-?)(\d*):(\d*)/);
@@ -28,4 +30,15 @@ export function minutesToTime(minutes: number) {
 
 export function formatDate(date: Date | string | number) {
     return format(date, "dd, DD.MM.YYYY");
+}
+
+export function getDay(days: IDay[], date: Date) {
+    return getDays(days, date, date)[0];
+}
+
+export function getDays(days: IDay[], start: Date, end: Date) {
+    const startAsDayOfYear = getDayOfYear(start);
+    const endAsDayOfYear = getDayOfYear(end);
+
+    return days.slice(startAsDayOfYear-1, endAsDayOfYear);
 }
