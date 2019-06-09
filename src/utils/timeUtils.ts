@@ -9,16 +9,17 @@ export function militaryTimeToMinutes(timeStr: string) {
 }
 
 export function timeToMinutes(timeStr: string) {
-    const match = timeStr.match(/(\d{0,2}):(\d{0,2})/);
+    const match = timeStr.match(/(-?)(\d*):(\d*)/);
 
     if(!match) {
         throw new Error("invalid time");
     }
 
-    const hours = Number(match[1]) || 0;
-    const minutes = Number(match[2]) || 0;
+    const multiplier = match[1] ? -1 : 1;
+    const hours = Number(match[2]) || 0;
+    const minutes = Number(match[3]) || 0;
 
-    return hours*60 + minutes;
+    return (hours*60 + minutes) * multiplier;
 }
 
 export function minutesToMilitaryTime(minutes: number) {

@@ -7,6 +7,7 @@ import { loadConfig } from "../config";
 import { IData } from "../models/data";
 import { IDay } from "../models/day";
 import { askQuestions } from "../utils/consoleUtils";
+import { timeToMinutes } from "../utils/timeUtils";
 
 export const createSheet = async () => {
     const config = await loadConfig();
@@ -71,9 +72,9 @@ export const createSheet = async () => {
             converter: hoursToMinutesConverter,
         },
         deltaFromYearBefore: {
-            question: "Delta time from year before (in minutes)",
-            defaultValue: "0",
-            converter: Number,
+            question: "Delta time from year before ([h]:[m])",
+            defaultValue: "00:00",
+            converter: timeToMinutes,
         },
     });
     
