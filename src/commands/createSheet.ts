@@ -1,31 +1,91 @@
-import { startOfYear, eachDay, endOfYear, format, isWeekend } from "date-fns";
+import { startOfYear, eachDay, endOfYear, format } from "date-fns";
 import { promises as fs } from "fs";
+import { userInfo } from "os";
 import { join } from "path";
 
+import { loadConfig } from "../config";
 import { IData } from "../models/data";
 import { IDay } from "../models/day";
-import { store } from "../store";
 import { askQuestions } from "../utils/consoleUtils";
 
 export const createSheet = async () => {
-    await store.load();
+    const config = await loadConfig();
     
+    const thisName = userInfo().username;
+    const thisYearAsString = new Date().getFullYear().toString();
+    
+    const hoursToMinutesConverter = (s: string) => Number(s) * 60;
+
     const answers = await askQuestions({
-        name: "Name:",
-        year: "Year:",
-        hoursPerDay: "Time per day (in hours):",
-        holidayInDays: "Holiday (in days):",
-        deltaFromYearBefore: "Delta time from year before (in minutes):",
+        name: {
+            question: "Name",
+            defaultValue: thisName,
+        },
+        year: {
+            question: "Year",
+            defaultValue: thisYearAsString,
+            converter: Number,
+        },
+        d1: {
+            question: "Time on Monday (in hours)",
+            defaultValue: "8",
+            converter: hoursToMinutesConverter,
+        },
+        d2: {
+            question: "Time on Tuesday (in hours)",
+            defaultValue: "8",
+            converter: hoursToMinutesConverter,
+        },
+        d3: {
+            question: "Time on Wednesday (in hours)",
+            defaultValue: "8",
+            converter: hoursToMinutesConverter,
+        },
+        d4: {
+            question: "Time on Thursday (in hours)",
+            defaultValue: "8",
+            converter: hoursToMinutesConverter,
+        },
+        d5: {
+            question: "Time on Friday (in hours)",
+            defaultValue: "8",
+            converter: hoursToMinutesConverter,
+        },
+        d6: {
+            question: "Time on Saturday (in hours)",
+            defaultValue: "0",
+            converter: hoursToMinutesConverter,
+        },
+        d0: {
+            question: "Time on Sunday (in hours)",
+            defaultValue: "0",
+            converter: hoursToMinutesConverter,
+        },
+        holidayInDays: {
+            question: "Holiday (in days)",
+            converter: Number,
+        },
+        minutesPerLeaveDay: {
+            question: "Time per leave day (in hours)",
+            defaultValue: "8",
+            converter: hoursToMinutesConverter,
+        },
+        deltaFromYearBefore: {
+            question: "Delta time from year before (in minutes)",
+            defaultValue: "0",
+            converter: Number,
+        },
     });
     
-    const firstDayOfYear = startOfYear(answers.year);
-    const lastDayOfYear = endOfYear(answers.year);
-    const minutesPerDay = Number(answers.hoursPerDay) * 60;
+    const firstDayOfYear = startOfYear(answers.year.toString());
+    const lastDayOfYear = endOfYear(answers.year.toString());
+
+    const timePerDay = (day: number) => (answers as any)[`d${day}`];
     
     const days = eachDay(firstDayOfYear, lastDayOfYear).map(date => {
         const day: IDay = {
             date: format(date, "YYYY-MM-DD"),
-            should: isWeekend(date) ? 0 : minutesPerDay,
+            should: timePerDay(date.getDay()),
         };
      
         return day;
@@ -33,16 +93,16 @@ export const createSheet = async () => {
 
     const data: IData = {
         name: answers.name,
-        year: Number(answers.year),
-        minutesPerDay,
-        startWith: {
-            holiday: Number(answers.holidayInDays) * minutesPerDay,
-            deltaFromYearBefore: Number(answers.deltaFromYearBefore),
+        year: answers.year,
+        startValue: answers.deltaFromYearBefore,
+        holiday: {
+            days: answers.holidayInDays,
+            minutesPerDay: answers.minutesPerLeaveDay,
         },
         days,
     };
 
-    const dataPath = join(store.config.path, `${answers.year}.json`);
+    const dataPath = join(config.path, `${answers.year}.json`);
 
     await fs.writeFile(dataPath, JSON.stringify(data, null, 4), { flag: "wx" });    
 

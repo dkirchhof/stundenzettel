@@ -10,9 +10,9 @@ import { readJsonOrCatch } from "./utils/fsUtils";
 const CONFIG_PATH = join(homedir(), ".stundenzettel");
 
 class Store {
-    public config: IConfig;
-    public data: IData;
-    public selectedMonth: number;
+    public config?: IConfig;
+    public data?: IData;
+    public selectedMonth?: number;
 
     public async load(date?: Date) {
         this.config = await readJsonOrCatch({
@@ -23,7 +23,7 @@ class Store {
 
         if(date) {
             this.data = await readJsonOrCatch({
-                path: join(this.config.path, `${date.getFullYear().toString()}.json`),
+                path: join(this.config!.path, `${date.getFullYear().toString()}.json`),
                 onFileNotFound: _ => { throw new Error("Couldn't find data file"); },
                 onOtherError:   e => { throw e; },
             });

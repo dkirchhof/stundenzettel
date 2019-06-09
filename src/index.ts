@@ -1,55 +1,43 @@
-import * as parseArgs from "minimist";
-
 import { printDay } from "./commands/printDay";
 import { setDay } from "./commands/setDay";
 import { setHoliday } from "./commands/setHoliday";
 import { showUI } from "./commands/showUI";
 import { createConfig } from "./commands/createConfig";
 import { createSheet } from "./commands/createSheet";
+import { setPublicHoliday } from "./commands/setPublicHoliday";
+import { printMonth } from "./commands/printMonth";
 
-const args: any = parseArgs(process.argv.slice(2), { 
-    alias: {
-        // createConfig
-        "path"      : "p",
-
-        // set
-        "date"      : "d",
-        "start"     : "s",
-        "end"       : "e",
-        "break"     : "b",
-        "holiday"   : "h",
-
-        // setHoliday
-        "startDate": "s",
-        "endDate"  : "e",
-    },
-});
-
-// console.log(args);
-
-switch(args._[0]) {
-    case "createConfig": {
-        createConfig(args);
+switch(process.argv[2]) {
+    case "create-config": {
+        createConfig();
         break;
     }
-    case "create": {
+    case "create-sheet": {
         createSheet();
         break;
     }
-    case "get": {
-        printDay(args);
+    case "print-day": {
+        printDay();
         break;
     }
-    case "set": {
-        setDay(args);
+    case "print-month": {
+        printMonth();
         break;
     }
-    case "setHoliday": {
-        setHoliday(args);
+    case "set-day": {
+        setDay();
+        break;
+    }
+    case "set-holiday": {
+        setHoliday();
+        break;
+    }
+    case "set-public-holiday": {
+        setPublicHoliday();
         break;
     }
     default: {
-        showUI(args);
+        // showUI();
         break;
     }
 } 

@@ -1,30 +1,26 @@
-import { promises as fs } from "fs";
-import { homedir } from "os";
-import { join, isAbsolute } from "path";
+import { isAbsolute } from "path";
 
-import { IConfig } from "../models/config";
+import { CONFIG_PATH, IConfig, saveConfig } from "../config";
+import { askQuestions } from "../utils/consoleUtils";
+import { mkdirRecursive } from "../utils/fsUtils";
 
-const CONFIG_PATH = join(homedir(), ".stundenzettel");
+export async function createConfig() {
+    const answers = await askQuestions({
+        path: {
+            question: "Absolute path:",
+        },
+    });
 
-interface IOptions {
-    path: string;
-}
-
-export async function createConfig(options: IOptions) {
-    if(!options.path || !options.path.trim().length) {
-        throw new Error("Invalid path");
-    }
-
-    if(!isAbsolute(options.path)) {
+    if(!isAbsolute(answers.path)) {
         throw new Error("Path should be absolute");
     }
 
     const config: IConfig = {
-        path: options.path,
+        ...answers,
     };
 
-    await fs.mkdir(options.path, { recursive: true });
-    await fs.writeFile(CONFIG_PATH, JSON.stringify(config, null, 4));
+    await mkdirRecursive(config.path);
+    await saveConfig(config);
 
     console.log(`Created config in ${CONFIG_PATH}`);
 }

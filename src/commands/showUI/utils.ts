@@ -10,6 +10,10 @@ export const getMonthName = (month: number) => format(new Date(0, month), "MMMM"
 export const formatDate = (date: Date) => format(date, "dd, DD.MM.YYYY", { locale: de });
 
 export function militaryTimeToMinutes(timeStr: string) {
+    if(timeStr.length !== 4) {
+        throw new Error("The time string should be 4 characters long.")
+    }
+    
     return Number(timeStr.slice(0, 2))*60 + Number(timeStr.slice(2));
 }
 
@@ -56,7 +60,7 @@ export function getDays(days: IDay[], start: Date, end: Date) {
     const startAsDayOfYear = getDayOfYear(start);
     const endAsDayOfYear = getDayOfYear(end);
 
-    return days.slice(startAsDayOfYear-1, endAsDayOfYear);    
+    return days.slice(startAsDayOfYear-1, endAsDayOfYear);
 }
 
 export function getSummaryOfDay(day: IDay): ISummary {
@@ -64,13 +68,13 @@ export function getSummaryOfDay(day: IDay): ISummary {
     const should = shouldTimeOfDay(day);
     const difference = is - should;
 
-    return { is, should, difference };
+    return { isTime: is, realShouldTime: should, difference };
 }
 
 export function getSummaryOfRange(days: IDay[], start: Date, end: Date, offset?: number) {
     const startValue: ISummary = {
-        is: offset || 0,
-        should: 0,
+        isTime: offset || 0,
+        realShouldTime: 0,
         difference: offset || 0,
     };
 
@@ -79,8 +83,8 @@ export function getSummaryOfRange(days: IDay[], start: Date, end: Date, offset?:
             const summaryOfDay = getSummaryOfDay(day);
 
             const newSummary: ISummary = {
-                is: summary.is + summaryOfDay.is,
-                should: summary.should + summaryOfDay.should,
+                isTime: summary.isTime + summaryOfDay.isTime,
+                realShouldTime: summary.realShouldTime + summaryOfDay.realShouldTime,
                 difference: summary.difference + summaryOfDay.difference,
             };
 
@@ -93,9 +97,9 @@ export function getHolidaySummary(data: IData): ISummary {
     const is = data.days.reduce((sum, day) => sum + (day.holiday || 0), 0);
 
     return {
-        is,
-        should: data.startWith.holiday,
-        difference: data.startWith.holiday - is,
+        isTime: is,
+        realShouldTime: data.holiday.time,
+        difference: data.holiday.time - is,
     };
 }
 
@@ -144,7 +148,7 @@ export const table = (rows: ICell[][]) => {
 }
 
 export function summaryToColor(summary: ISummary) {
-    if(summary.should === 0) {
+    if(summary.realShouldTime === 0) {
         return "{gray-fg}";
     }
 

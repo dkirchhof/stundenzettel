@@ -21,7 +21,7 @@ export const header = () => {
         [
             { value: store.data.name, align: "left" },
             { value: store.data.year, align: "right" },
-            { value: minutesToTime(store.data.startWith.deltaFromYearBefore, true), align: "right" },
+            { value: minutesToTime(store.data.holiday.deltaFromYearBefore, true), align: "right" },
             { value: minutesToTime(store.data.minutesPerDay), align: "right" },
             { value: `${isInDays}/${shouldInDays}`, align: "right" },
         ]

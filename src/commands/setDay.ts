@@ -1,28 +1,77 @@
-import { store } from "../store";
-import { assignDefinedProperties } from "../utils";
+import { format } from "date-fns";
+
+import { loadData, saveData } from "../data";
+import { askQuestions } from "../utils/consoleUtils";
+import { timeToMinutes, minutesToTime } from "../utils/timeUtils";
 import { getDay } from "./showUI/utils";
+import { IDay } from "../models/day";
 
-interface IOptions {
-    date?   : string;
-    start?  : number;
-    end?    : number;
-    break?  : number;
-    holiday?: number;
-    sick?   : number;
-}
+export async function setDay() {
+    const todayAsString = format(new Date(), "YYYY-MM-DD");
+    
+    const dateConverter = (s: string) => new Date(s);
+    
+    const answers1 = await askQuestions({
+        date: { 
+            question: "Date (YYYY-MM-DD)", 
+            defaultValue: todayAsString,
+            converter: dateConverter, 
+        },
+    });
 
-export async function setDay(options: IOptions) {
-    const date = options.date ? new Date(options.date) : new Date();
-
-    if(isNaN(date.getTime())) {
+    if(isNaN(answers1.date.getTime())) {
         throw new Error("Invalid date");
     }
 
-    await store.load(date);
+    const { data, dataPath } = await loadData(answers1.date.getFullYear());
 
-    const day = getDay(store.data.days, date);
+    const day = getDay(data.days, answers1.date);
+
+    const timeOfDayPropertyOrEmptyString = (day: IDay, property: keyof IDay) => day && day[property] && minutesToTime(day[property] as number) || ""
+
+    const timeOrUndefinedConverter = (s: string) => s.length ? timeToMinutes(s) : undefined;
+    const stringOrUndefinedConverter = (s: string) => s.length ? s : undefined;
+
+    const answers2 = await askQuestions({
+        start: { 
+            question: "Start ([hh]:[mm])",
+            optional: true,
+            defaultValue: timeOfDayPropertyOrEmptyString(day, "start"),
+            converter: timeOrUndefinedConverter,
+        },
+        end: { 
+            question: "End ([hh]:[mm])",
+            optional: true,
+            defaultValue: timeOfDayPropertyOrEmptyString(day, "end"),
+            converter: timeOrUndefinedConverter,
+        },
+        break: { 
+            question: "Break ([hh]:[mm])", 
+            optional: true,
+            defaultValue: timeOfDayPropertyOrEmptyString(day, "break"),
+            converter: timeOrUndefinedConverter,
+        },
+        holiday: { 
+            question: "Holiday ([hh]:[mm])",
+            optional: true,
+            defaultValue: timeOfDayPropertyOrEmptyString(day, "holiday"),
+            converter: timeOrUndefinedConverter,
+        },
+        sick: { 
+            question: "Sick ([hh]:[mm])",
+            optional: true,
+            defaultValue: timeOfDayPropertyOrEmptyString(day, "sick"),
+            converter: timeOrUndefinedConverter,
+        },
+        comment: {
+            question: "Comment",
+            optional: true,
+            defaultValue: day && day.comment,
+            converter: stringOrUndefinedConverter,
+        }
+    });
     
-    assignDefinedProperties(day, options, ["start", "end", "break", "holiday", "sick"]);
+    Object.assign(day, answers2);
 
-    await store.save();
+    await saveData(dataPath, data);
 }

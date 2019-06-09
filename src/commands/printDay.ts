@@ -1,20 +1,28 @@
-import { store } from "../store";
+import { format } from "date-fns";
+
+import { askQuestions } from "../utils/consoleUtils";
 import { getDay } from "./showUI/utils";
+import { loadData } from "../data";
+import { printAsTable } from "../models/day";
 
-interface IOptions {
-    date?: string;
-}
+export async function printDay() {
+    const todayAsString = format(new Date(), "YYYY-MM-DD");
 
-export async function printDay(options: IOptions) {
-    const date = options.date ? new Date(options.date) : new Date();
+    const answers = await askQuestions({
+        date: {
+            question: "Date",
+            defaultValue: todayAsString,
+            converter: s => new Date(s),
+        },
+    });
 
-    if(isNaN(date.getTime())) {
+    if(isNaN(answers.date.getTime())) {
         throw new Error("Invalid date");
     }
 
-    await store.load(date);
+    const { data } = await loadData(answers.date.getFullYear());
     
-    const day = getDay(store.data.days, date);
+    const day = getDay(data.days, answers.date);
 
-    console.log(day);
+    printAsTable([day]);
 }

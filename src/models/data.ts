@@ -3,10 +3,10 @@ import { IDay } from "./day";
 export interface IData {
     name: string;
     year: number;
-    minutesPerDay: number;
-    startWith: {
-        holiday: number;
-        deltaFromYearBefore: number;
+    startValue: number;
+    holiday: {
+        days: number;
+        minutesPerDay: number;
     };
     days: IDay[];
 }
