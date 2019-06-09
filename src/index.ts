@@ -1,12 +1,12 @@
 import { printDay } from "./commands/printDay";
 import { setDay } from "./commands/setDay";
 import { setHoliday } from "./commands/setHoliday";
-import { showUI } from "./commands/showUI";
 import { createConfig } from "./commands/createConfig";
 import { createSheet } from "./commands/createSheet";
 import { setPublicHoliday } from "./commands/setPublicHoliday";
 import { printMonth } from "./commands/printMonth";
 import { printYear } from "./commands/printYear";
+import { printHolidays } from "./commands/printHolidays";
 
 switch(process.argv[2]) {
     case "create-config": {
@@ -27,6 +27,10 @@ switch(process.argv[2]) {
     }
     case "print-year": {
         printYear();
+        break;
+    }
+    case "print-holidays": {
+        printHolidays();
         break;
     }
     case "set-day": {
