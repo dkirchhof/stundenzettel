@@ -6,6 +6,7 @@ import { createConfig } from "./commands/createConfig";
 import { createSheet } from "./commands/createSheet";
 import { setPublicHoliday } from "./commands/setPublicHoliday";
 import { printMonth } from "./commands/printMonth";
+import { printYear } from "./commands/printYear";
 
 switch(process.argv[2]) {
     case "create-config": {
@@ -22,6 +23,10 @@ switch(process.argv[2]) {
     }
     case "print-month": {
         printMonth();
+        break;
+    }
+    case "print-year": {
+        printYear();
         break;
     }
     case "set-day": {
