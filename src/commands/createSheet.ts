@@ -4,7 +4,7 @@ import { userInfo } from "os";
 import { join } from "path";
 
 import { loadConfig } from "../config";
-import { IData } from "../models/data";
+import { IData } from "../data";
 import { IDay } from "../models/day";
 import { askQuestions } from "../utils/consoleUtils";
 import { timeToMinutes } from "../utils/timeUtils";
@@ -63,7 +63,7 @@ export const createSheet = async () => {
             converter: hoursToMinutesConverter,
         },
         holidayInDays: {
-            question: "Holiday (in days)",
+            question: "Holiday entitlement(in days)",
             converter: Number,
         },
         minutesPerLeaveDay: {
