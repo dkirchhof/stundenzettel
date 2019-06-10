@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { printDay } from "./commands/printDay";
 import { setDay } from "./commands/setDay";
 import { setHoliday } from "./commands/setHoliday";
