@@ -7,7 +7,7 @@ import { mkdirRecursive } from "../utils/fsUtils";
 export async function createConfig() {
     const answers = await askQuestions({
         path: {
-            question: "Absolute path:",
+            question: "Absolute path",
         },
     });
 

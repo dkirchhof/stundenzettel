@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { loadData, saveData } from "../data";
 import { askQuestions } from "../utils/consoleUtils";
 import { getDay, timeToMinutes, minutesToTime } from "../utils/timeUtils";
-import { IDay } from "../models/day";
+import { IDay, printAsTable } from "../models/day";
 
 export async function setDay() {
     const todayAsString = format(new Date(), "YYYY-MM-DD");
@@ -73,4 +73,6 @@ export async function setDay() {
     Object.assign(day, answers2);
 
     await saveData(dataPath, data);
+
+    printAsTable([day]);
 }
